@@ -33,13 +33,13 @@ class HighLevelProcessManager():
         """
         self.queue_ready.put(process)
 
-    def __shortest_job_first__(self):
+    def __shortest_remaining_time_first__(self):
         pass
 
-    def __first_come_first_serve__(self):
+    def __round_robin__(self):
         pass
 
     SCHEDULER_ALGORITHMS = {
-        'fcfs': __first_come_first_serve__,
-        'sjb': __shortest_job_first__
+        'srtf': __shortest_remaining_time_first__,
+        'rr': __round_robin__
     }
