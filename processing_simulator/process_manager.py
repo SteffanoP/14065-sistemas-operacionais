@@ -49,12 +49,43 @@ class HighLevelProcessManagerRR(HighLevelProcessManager):
     def __find_waiting_time__(self, quantum):
         """ Function calculates the processes' waiting time """
 
+        current_time = 0
+        remaining_burst_time = [0] * self.processes_amount
+
+        for process in self.queue_ready:
+            remaining_burst_time = process.burst_time
+        
+        while(1):
+            processes_completed = True
+
+            for i in range(self.processes_amount):
+
+                if(remaining_burst_time[i] > 0):
+                    processes_completed = False
+
+                    if(remaining_burst_time[i] > quantum):
+                        current_time += quantum
+
+                        remaining_burst_time[i] -= quantum
+                    else:
+                        current_time += remaining_burst_time[i]
+
+                        self.waiting_time[i] = current_time + self.queue_ready[i].burst_time
+
+                        remaining_burst_time[i] = 0
+
+            if processes_completed:
+                break
 
     def __find_turn_around_time__(self):
         """ Function calculates the processes' turn around time """
 
         for i in range(self.processes_amount):
             self.turn_around_time[i] = self.queue_ready[i].burst_time + self.wainting_time[i]
+
+        # Trying to rewrite the for loop above, but I ain't sure if it is correct logically...
+        #for process in self.queue_ready:
+        #    self.turn_around_time = process.burst_time + self.wainting_time
 
     def __find_average_time__(self):
         """ Function calculates the processes' average time """
