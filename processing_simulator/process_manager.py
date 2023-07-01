@@ -55,17 +55,20 @@ class HighLevelProcessManagerRR(HighLevelProcessManager):
         for process in self.queue_ready:
             remaining_burst_time = process.burst_time
         
+        """ The while loop keeps flowing untill all the processes are completed """
         while(1):
             processes_completed = True
 
             for i in range(self.processes_amount):
 
+                """ Verification if there's any remaining time to the current process """
                 if(remaining_burst_time[i] > 0):
                     processes_completed = False
 
                     if(remaining_burst_time[i] > quantum):
                         current_time += quantum
 
+                        """ The remaining time decreases acordding to quantum time untill it's over """
                         remaining_burst_time[i] -= quantum
                     else:
                         current_time += remaining_burst_time[i]
