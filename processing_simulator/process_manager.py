@@ -47,24 +47,33 @@ class HighLevelProcessManagerRR(HighLevelProcessManager):
             return None
 
     def __find_waiting_time__(self, quantum):
-        pass
+        """ Function calculates the processes' waiting time """
+
 
     def __find_turn_around_time__(self):
+        """ Function calculates the processes' turn around time """
 
         for i in range(self.processes_amount):
-
             self.turn_around_time[i] = self.queue_ready[i].burst_time + self.wainting_time[i]
 
     def __find_average_time__(self):
+        """ Function calculates the processes' average time """
+        
         waiting_total_time = 0
         ramaining_total_time = 0
 
+        """ Caliing the function to calculate the waiting time """
         self.__find_waiting_time__(self, self.queue_ready[0].quantum_time)
+
+        """ Caliing the function to calculate the turn around time """
         self.__find_turn_around_time__(self)
 
-        for i in range(self.processes_amount):
-            waiting_total_time += self.wainting_time[i]
-            ramaining_total_time += self.turn_around_time[i]
+        for wt_time in self.wainting_time:
+            waiting_total_time += wt_time
 
-        print("\nAverage waiting time = %.5f "%(waiting_total_time / self.processes_amount) )
+        for rm_time in self.turn_around_time:
+            ramaining_total_time += rm_time
+
+        """ Printing the average time """
+        print("\nAverage waiting time = %.5f "%(waiting_total_time / self.processes_amount))
         print("Average turn around time = %.5f "% (ramaining_total_time / self.processes_amount))
