@@ -23,5 +23,8 @@ my_process_3 = HighLevelProcess(
     burst_time=5
 )
 
-process_manager = HighLevelProcessManagerSRTF([my_process_1,my_process_2,my_process_3])
+# process_manager = HighLevelProcessManagerSRTF([my_process_1,my_process_2,my_process_3])
+# process_manager.start()
+
+process_manager = HighLevelProcessManagerRR([my_process_1,my_process_2,my_process_3])
 process_manager.start()

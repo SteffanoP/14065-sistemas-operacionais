@@ -13,7 +13,7 @@ class HighLevelProcess():
         self.priority = priority
         self.is_io_bound = is_io_bound
         self.burst_time = burst_time
-        self.quantum_time = 0.002 # in seconds
+        self.quantum_time = 2 # in seconds
         self.arrival_time = 0 # Can also be called as start_time
     
     def set_arrival_time(self):
