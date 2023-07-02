@@ -110,6 +110,7 @@ class HighLevelProcessManagerRR(HighLevelProcessManager):
                 """ Verification if there's any remaining time to the current process """
                 if(process.burst_time > 0):
                     processes_completed = False
+                    self.__execute_process__(process, self.queue_ready)
 
                     if(process.burst_time > quantum):
                         current_time += quantum
