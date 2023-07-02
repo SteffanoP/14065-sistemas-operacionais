@@ -3,58 +3,37 @@ import time
 from process import HighLevelProcess
 from process_manager import HighLevelProcessManagerRR, HighLevelProcessManagerSRTF
 
-my_process_1 = HighLevelProcess(
-    pid=1,
-    name="P1",
-    priority=0,
-    is_io_bound=False,
-    burst_time=3,
-    arrival_time=0
-)
-my_process_2 = HighLevelProcess(
-    pid=2,
-    name="P2",
-    priority=0,
-    is_io_bound=False,
-    burst_time=8,
-    arrival_time=0
-)
-my_process_3 = HighLevelProcess(
-    pid=3,
-    name="P3",
-    priority=0,
-    is_io_bound=False,
-    burst_time=6,
-    arrival_time=0
-)
-my_process_4 = HighLevelProcess(
-    pid=4,
-    name="P4",
-    priority=0,
-    is_io_bound=False,
-    burst_time=4,
-    arrival_time=0
-)
-my_process_5 = HighLevelProcess(
-    pid=5,
-    name="P5",
-    priority=0,
-    is_io_bound=False,
-    burst_time=2,
-    arrival_time=0
-)
+print("Welcome to the JS Simulator! To create the process(es), pelase, enter the informations below\n")
 
-process_manager = HighLevelProcessManagerSRTF([my_process_1])
+amount = int(input("Process amount: "))
+processes_created = []
+
+for i in range(amount):
+    process =  HighLevelProcess(
+        pid = input("Process id: "),
+        name = input("Process name: "),
+        priority = input("Process priority: "),
+        is_io_bound = input("Is this an I/O bound process? (True or False) "),
+        burst_time = int(input("Process burst time: ")),
+        arrival_time = int(input("Process arrival time: "))
+    )
+    processes_created.append(process)
+    print("\n")
+
+print("Now choose the scaling algorithm to run the processes")
+print("1.Shortest Remaining Time First")
+print("2.Round robin")
+algorithm = input("Select a number: ")
+
+if(algorithm == "1"):
+    process_manager = HighLevelProcessManagerSRTF([processes_created[0]])
+else:
+    process_manager = HighLevelProcessManagerRR([processes_created[0]])
+
 x = threading.Thread(target=process_manager.start)
 x.start()
-process_manager.put_into_queue_ready(my_process_2)
-time.sleep(1)
-process_manager.put_into_queue_ready(my_process_3)
-time.sleep(1)
-time.sleep(1)
-process_manager.start()
 
-process_manager = HighLevelProcessManagerRR([my_process_4,my_process_5])
-process_manager.put_into_queue_ready(my_process_4)
-time.sleep(1)
-process_manager.put_into_queue_ready(my_process_5)
+for my_process in processes_created:
+    if(my_process != processes_created[0]):
+        process_manager.put_into_queue_ready(my_process)
+        time.sleep(1)
