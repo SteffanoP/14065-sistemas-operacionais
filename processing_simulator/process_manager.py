@@ -1,6 +1,7 @@
 import time
-from process import HighLevelProcess
 import copy
+import os
+from process import HighLevelProcess
 
 class HighLevelProcessManager():
     def __init__(self, processes: list[HighLevelProcess]) -> None:
@@ -17,6 +18,18 @@ class HighLevelProcessManager():
             process (HighLevelProcess): the process to put into the queue.
         """
         self.queue_ready.append(process)
+    
+    @staticmethod
+    def __execute_process__(process: HighLevelProcess, queue: list[HighLevelProcess]):
+        os.system('clear')
+        print("Processo em Execução")
+        print("PID\tNome\tBurst_time")
+        print(f"{process.pid}\t{process.name}\t{process.burst_time}")
+        print("\n")
+        print("Processos em Espera")
+        print("PID\tNome\tBurst_time")
+        [print(f"{pw.pid}\t{pw.name}\t{pw.burst_time}") for pw in queue]
+        process.execute()
 
 
 class HighLevelProcessManagerSRTF(HighLevelProcessManager):
@@ -38,8 +51,7 @@ class HighLevelProcessManagerSRTF(HighLevelProcessManager):
     def __execute__(self):
         while self.current_process_executing is not None:
             # Execute process
-            print(f"Executing Process {self.current_process_executing.name}")
-            self.current_process_executing.execute()
+            self.__execute_process__(self.current_process_executing, self.queue_ready)
             self.current_time += 1
 
             cond1 = self.current_process_executing.get_remaining_burst_time() == 0
