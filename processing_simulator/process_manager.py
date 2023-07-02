@@ -72,15 +72,6 @@ class HighLevelProcessManagerSRTF(HighLevelProcessManager):
         self.current_process_executing = self.__get_process_minimal_burst_time__()
         self.queue_ready.remove(self.current_process_executing)
 
-    def __find_waiting_time__(self):
-        pass
-
-    def __find_turn_around_time__(self):
-        pass
-
-    def __find_average_time__(self):
-        pass
-
 
 class HighLevelProcessManagerRR(HighLevelProcessManager):
     def __init__(self, processes) -> None:
@@ -128,10 +119,6 @@ class HighLevelProcessManagerRR(HighLevelProcessManager):
 
         for i in range(self.processes_amount):
             self.turn_around_time[i] = self.queue_ready[i].burst_time + self.waiting_time[i]
-
-        # Trying to rewrite the for loop above, but I ain't sure if it is correct logically...
-        #for process in self.queue_ready:
-        #    self.turn_around_time = process.burst_time + self.wainting_time
 
     def __find_average_time__(self):
         """ Function calculates the processes' average time """
