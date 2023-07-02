@@ -152,5 +152,5 @@ class HighLevelProcessManagerRR(HighLevelProcessManager):
             remaining_total_time += rm_time
 
         """ Printing the average time """
-        print("\nAverage waiting time = %.5f "%(waiting_total_time / self.processes_amount))
-        print("Average turn around time = %.5f "% (remaining_total_time / self.processes_amount))
+        print("\nAverage waiting time = %.2f "%(waiting_total_time / self.processes_amount))
+        print("Average turn around time = %.2f "% (remaining_total_time / self.processes_amount))
