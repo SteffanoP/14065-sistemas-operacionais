@@ -37,20 +37,20 @@ process_4 = Process(
     burst_time=0
 )
 
-processes_created.append(process_1)
-processes_created.append(process_2)
-processes_created.append(process_3)
-processes_created.append(process_4)
+# processes_created.append(process_1)
+# processes_created.append(process_2)
+# processes_created.append(process_3)
+# processes_created.append(process_4)
 
-process_manager = ProcessFirstFitAlgorithm([process_1])
+# process_manager = ProcessFirstFitAlgorithm([process_1])
 
-x = threading.Thread(target=process_manager.start)
-x.start()
+# x = threading.Thread(target=process_manager.start)
+# x.start()
 
-for my_process in processes_created:
-    if(my_process != processes_created[0]):
-        process_manager.put_into_queue_ready(my_process)
-        time.sleep(1)
+# for my_process in processes_created:
+#     if(my_process != processes_created[0]):
+#         process_manager.put_into_queue_ready(my_process)
+#         time.sleep(1)
 
-# process_manager = ProcessFirstFitAlgorithm([process_1, process_2, process_3, process_4])
-# process_manager.start()
+process_manager = ProcessFirstFitAlgorithm([process_1, process_2, process_3, process_4])
+process_manager.start()
