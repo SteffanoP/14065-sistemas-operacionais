@@ -19,7 +19,7 @@ class ProcessManager():
     def split_partitions(self) -> None:
         self.partitions_size = [2, 5, 4, 1] ## Sizes in MB
 
-    ## Continuing the last part about showing the allocated block and is there's internal and/or external fragmentation
+    """ Continuing the last part about showing the allocated block and is there's internal and/or external fragmentation """
     @staticmethod
     def __execute_process__(process: Process, queue: list[Process]):
         os.system('clear')
@@ -30,7 +30,7 @@ class ProcessManager():
         [print(f"{pw.name}\t{pw.size}\t") for pw in queue]
         process.execute()
 
-## Only SUGGESTIONS of algortihms to implement
+""" Only SUGGESTIONS of algortihms to implement """
 
 class ProcessFirstFitAlgorithm(ProcessManager):
     pass
