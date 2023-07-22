@@ -49,24 +49,26 @@ class ProcessFirstFitAlgorithm(ProcessManager):
         """
         allocated_partition = [-1] * self.processes_amount
         fragmentation = []
+        internal_fragmentation = [-1] * len(self.partitions_size)
+
         """
             No block is allocated in the beginning, so the algorithm searches for the first space available that fits the process
         """
-        for process in self.queue_ready:
-            for block_size in self.partitions_size:
-
+        for process, i in zip(self.queue_ready, range(self.processes_amount)):
+            ## TODO: block incrementor is not incrementing... AAAAAA
+            for block in range(len(self.partitions_size)):
+               
                 """
                     Verification if the block fits the process
                 """
-                if process.size <= block_size:
-                    allocated_partition[process.pid] = self.partitions_size.index(block_size)
+                if process.size[i] <= self.partitions_size[block]:
+                    allocated_partition[process.pid[i]] = block
 
                     """
                         Since the block is available, it's size is reduced by the process' size.
                         If any amount of size remains (>0), then there's an internal fragmentation.
                     """
-                    self.partitions_size[self.partitions_size.index(block_size)] = block_size - process.size
-
+                    internal_fragmentation[block] = self.partitions_size[block] - process.size[i]
                     break
 
         for block in self.partitions_size:
