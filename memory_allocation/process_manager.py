@@ -6,7 +6,7 @@ class ProcessManager():
         self.queue_ready = processes
         self.processes_amount = len(processes)
         self.main_memory_size = 12 ## MB
-        self.partitions_size = list[int] ## It may be a variable number. processes_amount <= partitions_size_len
+        self.partitions_size = [3, 5, 3, 1] ## It may be a variable number. processes_amount <= partitions_size_len
         self.is_fe_fi = str
 
     def put_into_queue_ready(self, process: Process) -> None:
@@ -16,9 +16,6 @@ class ProcessManager():
             process (Process): the process to put into the queue.
         """
         self.queue_ready.append(process)
-
-    def split_partitions(self) -> None:
-        self.partitions_size = [3, 5, 3, 1] ## Sizes in MB
 
     """ Continuing the last part about showing the allocated block and is there's internal and/or external fragmentation """
     @staticmethod
@@ -52,7 +49,6 @@ class ProcessFirstFitAlgorithm(ProcessManager):
         """
         allocated_partition = [-1] * self.processes_amount
         fragmentation = []
-
         """
             No block is allocated in the beginning, so the algorithm searches for the first space available that fits the process
         """
