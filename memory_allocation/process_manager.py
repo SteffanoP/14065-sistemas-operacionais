@@ -22,7 +22,7 @@ class ProcessManager():
     def __execute_process__(process: Process, queue: list[Process]):
         os.system('clear')
         print("Alocação da Memória")
-        print("Nome\tTamanho\tFE_FI\tBloco_alocado")
+        print("Nome\tTamanho\tFE_FI\tBloco_alocado") ## The professor want us to show these informations in the end
         print(f"{process.name}\t{process.size}\t")
         print("\n")
         [print(f"{pw.name}\t{pw.size}\t") for pw in queue]
