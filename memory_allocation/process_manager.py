@@ -72,7 +72,6 @@ class ProcessFirstFitAlgorithm(ProcessManager):
         print("Nu_Processo Tam_Processo   Bloco_Alocado")
         for process in self.queue_ready:
 
-            ## self.__execute_process__(process, self.queue_ready)
             print(" ", process.pid[0] + 1, "         ", process.size[0],
                             "         ", end = " ")
             
