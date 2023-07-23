@@ -60,36 +60,36 @@ class ProcessFirstFitAlgorithm(ProcessManager):
                     any process has passed leaving an internal fragmentation
                 """
                 if internal_fragmentation[block] < 0:
-                    if process.size[0] <= self.partitions_size[block]:
-                        allocated_partition[process.pid[0]] = block
+                    if process.pid <= self.partitions_size[block]:
+                        allocated_partition[process.pid] = block
                         """
                             Since the block is available, it's size is reduced by the process' size.
                             If any amount of size remains (>0), then there's an internal fragmentation.
                         """
-                        internal_fragmentation[block] = self.partitions_size[block] - process.size[0]
+                        internal_fragmentation[block] = self.partitions_size[block] - process.pid
                         break
 
         print("Nu_Processo Tam_Processo   Bloco_Alocado")
         for process in self.queue_ready:
 
-            print(" ", process.pid[0] + 1, "         ", process.size[0],
+            print(" ", process.pid + 1, "         ", process.pid,
                             "         ", end = " ")
             
-            if allocated_partition[process.pid[0]] != -1:
-                print(allocated_partition[process.pid[0]] + 1)
+            if allocated_partition[process.pid] != -1:
+                print(allocated_partition[process.pid] + 1)
             else:
                 print("Not allocated")
-                external_fragmentation[process.pid[0]] = process.size[0]
+                external_fragmentation[process.pid] = process.pid
 
         print("\n")
         print("Nu_Processo  Frag_Externa  Frag_Interna")
         for process, ex_f in zip(self.queue_ready, external_fragmentation):
 
-            print(" ", process.pid[0] + 1, "         ", ex_f, "MB",
+            print(" ", process.pid + 1, "         ", ex_f, "MB",
                             "         ", end = " ")
 
-            if internal_fragmentation[process.pid[0]] > 0:
-                print(internal_fragmentation[process.pid[0]], "MB")
+            if internal_fragmentation[process.pid] > 0:
+                print(internal_fragmentation[process.pid], "MB")
             else:
                 print(" ")
 
