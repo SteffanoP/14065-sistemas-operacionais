@@ -18,12 +18,12 @@ class ProcessManager():
         """
         self.queue_ready.append(process)
 
-    """ Continuing the last part about showing the allocated block and is there's internal and/or external fragmentation """
+    """ Continuing the last part about showing the allocated block and is there's internal fragmentation """
     @staticmethod
     def __execute_process__(process: Process, queue: list[Process]):
         os.system('clear')
         print("Alocação da Memória")
-        print("Nome\tTamanho\tBloco_alocado\tFrag_Interna\tFrag_Externa") ## The professor want us to show these informations in the end
+        print("Nome\tTamanho\tBloco_alocado\tFrag_Interna") 
         print(f"{process.name}\t{process.size}\t")
         print("\n")
         [print(f"{pw.name}\t{pw.size}\t") for pw in queue]
@@ -49,7 +49,6 @@ class ProcessFirstFitAlgorithm(ProcessManager):
         """
         allocated_partition = [-1] * self.processes_amount
         internal_fragmentation = [-1] * len(self.partitions_size)
-        external_fragmentation = [0] * len(self.partitions_size)
 
         """
             No block is allocated in the beginning, so the algorithm searches for the first 
@@ -81,14 +80,13 @@ class ProcessFirstFitAlgorithm(ProcessManager):
                 print(allocated_partition[process.pid] + 1)
             else:
                 print("Not allocated")
-                external_fragmentation[process.pid] = process.size
 
         print("\n")
-        print("Nu_Processo  Frag_Externa  Frag_Interna")
-        for process, ex_f in zip(self.queue_ready, external_fragmentation):
+        print("Nu_Processo     Frag_Interna")
+        for process in self.queue_ready:
 
-            print(" ", process.pid + 1, "         ", ex_f, "MB",
-                            "         ", end = " ")
+            print(" ", process.pid + 1,
+                            "             ", end = " ")
 
             if internal_fragmentation[process.pid] > 0:
                 print(internal_fragmentation[process.pid], "MB")
