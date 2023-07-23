@@ -39,5 +39,5 @@ process_4 = Process(
 
 memory_manager_first_fit = MemoryFirstFitAlgorithm([process_1, process_2, process_3, process_4])
 memory_manager_first_fit.start()
-memory_manager_best_fit = MemoryBestFitAlgorithm([process_1, process_2, process_3, process_4])
+memory_manager_best_fit = MemoryBestFitAlgorithm([process_1, process_2, process_3, process_4, process_5])
 memory_manager_best_fit.start()

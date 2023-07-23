@@ -1,6 +1,9 @@
 import os
-from process import Process
 import copy
+import random
+from time import sleep
+
+from process import Process
 
 class MemoryManager():
     def __init__(self, processes: list[Process]) -> None:
@@ -118,16 +121,25 @@ class MemoryBestFitAlgorithm(MemoryManager):
                     local_best = partition[0]
                     can_allocate = True
 
+            try:
+                index = self.partitions.index((local_best, None))
+            except ValueError as error:
+                if can_allocate is True:
+                    raise error
 
-            if can_allocate is False:
-                print(f"Não foi possível alocar o processo {process.pid}.")
-                continue
+            while can_allocate is False:
+                partition = random.choice(self.partitions)
+                if process.size <= partition[0]:
+                    self.swap.append(partition)
+                    local_best = partition[0]
+                    index = self.partitions.index(partition)
+                    can_allocate = True
 
-            index = self.partitions.index((local_best, None))
             self.partitions[index] = ((local_best, process.pid))
-            print(self.partitions)
+            # print(self.partitions)
+            self.print_allocation()
+            sleep(2)
 
-        self.print_allocation()
         return None
 
     def print_allocation(self):
@@ -140,6 +152,11 @@ class MemoryBestFitAlgorithm(MemoryManager):
                 continue
             process = self.__get_process__(partition[1])
             print(f"{process.pid}\t{process.size}\t{partition[0]}\t{partition[0] - process.size}")
+
+        print("Swapping")
+        print("Nome\tBloco alocado")
+        for process in self.swap:
+            print(f"{process[1]}\t{process[0]}")
 
     def __get_process__(self, pid) -> Process:
         return next((p for p in self.queue_ready if p.pid == pid), None)
