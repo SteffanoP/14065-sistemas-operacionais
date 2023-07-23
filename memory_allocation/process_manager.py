@@ -1,5 +1,6 @@
 import os
 from process import Process
+import copy
 
 class ProcessManager():
     def __init__(self, processes: list[Process]) -> None:
@@ -7,6 +8,7 @@ class ProcessManager():
         self.processes_amount = len(processes)
         self.main_memory_size = 1700 ## MB
         self.partitions_size = [100, 500, 200, 300, 600] ## It may be a variable number. processes_amount <= partitions_size_len
+        self.partitions = [(partition_size, None) for partition_size in self.partitions_size]
 
     def put_into_queue_ready(self, process: Process) -> None:
         """Put a process into the ready queue.
@@ -60,26 +62,26 @@ class ProcessFirstFitAlgorithm(ProcessManager):
                     any process has passed leaving an internal fragmentation
                 """
                 if internal_fragmentation[block] < 0:
-                    if process.pid <= self.partitions_size[block]:
+                    if process.size <= self.partitions_size[block]:
                         allocated_partition[process.pid] = block
                         """
                             Since the block is available, it's size is reduced by the process' size.
                             If any amount of size remains (>0), then there's an internal fragmentation.
                         """
-                        internal_fragmentation[block] = self.partitions_size[block] - process.pid
+                        internal_fragmentation[block] = self.partitions_size[block] - process.size
                         break
 
         print("Nu_Processo Tam_Processo   Bloco_Alocado")
         for process in self.queue_ready:
 
-            print(" ", process.pid + 1, "         ", process.pid,
+            print(" ", process.pid + 1, "         ", process.size,
                             "         ", end = " ")
             
             if allocated_partition[process.pid] != -1:
                 print(allocated_partition[process.pid] + 1)
             else:
                 print("Not allocated")
-                external_fragmentation[process.pid] = process.pid
+                external_fragmentation[process.pid] = process.size
 
         print("\n")
         print("Nu_Processo  Frag_Externa  Frag_Interna")
@@ -103,7 +105,42 @@ class ProcessBestFitAlgorithm(ProcessManager):
             print("No process in ready queue")
             return None
 
-        self.__schedule_new_process__()
-        self.__execute__()
+        for process in self.queue_ready:
 
+            local_best = copy.deepcopy(process.size)
+            can_allocate = False
+            for partition in self.partitions:
+                if can_allocate is True:
+                    if partition[0] <= local_best and process.size <= partition[0]:
+                        local_best = partition[0]
+                    continue
+
+                if partition[1] is None and local_best <= partition[0]:
+                    local_best = partition[0]
+                    can_allocate = True
+
+
+            if can_allocate is False:
+                print(f"Não foi possível alocar o processo {process.pid}.")
+                continue
+
+            index = self.partitions.index((local_best, None))
+            self.partitions[index] = ((local_best, process.pid))
+            print(self.partitions)
+
+        self.print_allocation()
         return None
+
+    def print_allocation(self):
+        os.system('clear')
+        print("Alocação da Memória")
+        print("Nome\tTamanho\tBloco_alocado\tFrag_Interna")
+        for partition in self.partitions:
+            if partition[1] is None:
+                print(f"-\t{partition[0]}\t000\t000")
+                continue
+            process = self.__get_process__(partition[1])
+            print(f"{process.pid}\t{process.size}\t{partition[0]}\t{partition[0] - process.size}")
+
+    def __get_process__(self, pid) -> Process:
+        return next((p for p in self.queue_ready if p.pid == pid), None)
