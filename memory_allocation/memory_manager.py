@@ -2,13 +2,14 @@ import os
 from process import Process
 import copy
 
-class ProcessManager():
+class MemoryManager():
     def __init__(self, processes: list[Process]) -> None:
         self.queue_ready = processes
         self.processes_amount = len(processes)
         self.main_memory_size = 1700 ## MB
         self.partitions_size = [100, 500, 200, 300, 600] ## It may be a variable number. processes_amount <= partitions_size_len
         self.partitions = [(partition_size, None) for partition_size in self.partitions_size]
+        self.swap = []
 
     def put_into_queue_ready(self, process: Process) -> None:
         """Put a process into the ready queue.
@@ -30,7 +31,7 @@ class ProcessManager():
 
 """ Only SUGGESTIONS of algortihms to implement """
 
-class ProcessFirstFitAlgorithm(ProcessManager):
+class MemoryFirstFitAlgorithm(MemoryManager):
     def __init__(self, processes) -> None:
         super().__init__(processes)
 
@@ -94,7 +95,7 @@ class ProcessFirstFitAlgorithm(ProcessManager):
                 print(" ")
 
 
-class ProcessBestFitAlgorithm(ProcessManager):
+class MemoryBestFitAlgorithm(MemoryManager):
     def __init__(self, processes) -> None:
         super().__init__(processes)
 
@@ -135,7 +136,7 @@ class ProcessBestFitAlgorithm(ProcessManager):
         print("Nome\tTamanho\tBloco_alocado\tFrag_Interna")
         for partition in self.partitions:
             if partition[1] is None:
-                print(f"-\t{partition[0]}\t000\t000")
+                print(f"-\t000\t{partition[0]}\t000")
                 continue
             process = self.__get_process__(partition[1])
             print(f"{process.pid}\t{process.size}\t{partition[0]}\t{partition[0] - process.size}")

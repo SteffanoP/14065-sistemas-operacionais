@@ -1,7 +1,7 @@
 import threading
 import time
 from process import Process
-from process_manager import ProcessFirstFitAlgorithm
+from memory_manager import MemoryBestFitAlgorithm, MemoryFirstFitAlgorithm
 
 processes_created = []
 
