@@ -29,6 +29,11 @@ class FileSystem():
             else:
                 current_file = File(folder.files)
                 while current_file.next:
+                    # I DON'T KNOW IF THIS CONDITION TO ONSIDER THE EQUALS NAMES WOULD BE WORTHED ON THIS PART OF THE CODE...
+                    # if current_file.name == new_file.name:
+                    #     print(f"The file name already exists in this folder.")
+                    #     break
+                    # else:
                     current_file = current_file.next
                 current_file.next = new_file
                 print(f"File '{name}' created in '{custom_dir}'.")
@@ -74,6 +79,9 @@ class FileSystem():
             if Folder(dir.subdirectories): # DOES THIS WORKS LOGICALLY?
                 for subdirectory in dir.subdirectories:
                     print(f"Subfolder: {subdirectory.name}")
+
+    def delete(self, name):
+        pass
 
     def find_path(self, path):
         folders = path.split("/")
