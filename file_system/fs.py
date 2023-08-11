@@ -13,7 +13,7 @@ class Folder():
 class FileSystem():
     def __init__(self, size) -> None:
         self.max_size = size
-        self.current_dir = '/'
+        self.current_dir = Folder('/')
         self.directories = []
 
     def create_file(self, name: str, size: int, *, custom_dir: str):
@@ -34,7 +34,6 @@ class FileSystem():
                 print(f"File '{name}' created in '{custom_dir}'.")
         else:
             print(f"Folder '{custom_dir}' not found.")
-        pass
 
     def create_folder(self, name) -> None:
         if name[-3::] == '../':
@@ -49,7 +48,15 @@ class FileSystem():
 
     # Command change directory
     def cd(self, new_directory):
-        pass
+        dir = self.find_path(new_directory)
+
+        if dir:
+            for folder in self.current_dir.subdirectories:
+                folder_info = Folder(folder)
+                if folder_info.name == dir.name:
+                    self.__set_current_dir__(dir)
+        else:
+            print(f"The system did not find the specified path.")
 
     # Command list contents from a directory
     def ls(self, path):
