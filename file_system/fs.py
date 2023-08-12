@@ -5,15 +5,16 @@ class File():
         self.next = None # IN CASE WE USE LINKED ALLOCATION
 
 class Folder():
-    def __init__(self, name) -> None:
+    def __init__(self, name, current_dir) -> None:
         self.name = name
+        self.previous_folder = current_dir
         self.subdirectories = []
         self.files = []
 
 class FileSystem():
     def __init__(self, size) -> None:
         self.max_size = size
-        self.current_dir = Folder('/')
+        self.current_dir = Folder('/', current_dir=None)
         self.directories = []
 
     def create_file(self, name: str, size: int, *, custom_dir: str):
@@ -27,7 +28,7 @@ class FileSystem():
             if not folder.files:
                 folder.files = new_file # WOULD IT BE AN append() INSTEAD?
             else:
-                current_file = File(folder.files)
+                current_file = File(folder.files, size=size)
                 while current_file.next:
                     # I DON'T KNOW IF THIS CONDITION TO ONSIDER THE EQUALS NAMES WOULD BE WORTHED ON THIS PART OF THE CODE...
                     # if current_file.name == new_file.name:
@@ -42,11 +43,14 @@ class FileSystem():
 
     def create_folder(self, name) -> None:
         if name[-3::] == '../':
-            # TODO: Create allocation for directory for this case
-            return
+            if self.current_dir.previous_folder is None:
+                print("Operation not permitted on root folder")
+                return
+
+            self.cd('../')
 
         final_name = name[2::] if name[-2::] == './' else name
-        folder = Folder(final_name)
+        folder = Folder(final_name, current_dir=self.current_dir)
         self.directories.append(folder)
         self.current_dir += final_name
         return
@@ -61,7 +65,7 @@ class FileSystem():
                 if folder_info.name == dir.name:
                     self.__set_current_dir__(dir)
         else:
-            print(f"The system did not find the specified path.")
+            print("The system did not find the specified path.")
 
     # Command list contents from a directory
     def ls(self, path):
