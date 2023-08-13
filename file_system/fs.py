@@ -88,12 +88,21 @@ class FileSystem():
         pass
 
     def find_path(self, path):
+        if path == '/':
+            return self.root_dir
+
+        if path == './':
+            return self.current_dir
+
+        if path == '../' and self.current_dir != self.root_dir:
+            return self.current_dir.previous_folder
+
         folders = path.split("/")
-        current_folder = Folder(self.current_dir)
+        current_folder = self.current_dir
 
         for folder_name in folders:
             found = False
-            for subfolder in current_folder:
+            for subfolder in current_folder.subdirectories:
                 if subfolder.name == folder_name:
                     current_folder = subfolder
                     found = True
