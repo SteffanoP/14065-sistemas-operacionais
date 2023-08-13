@@ -4,6 +4,9 @@ class File():
         self.size = size
         self.next = None # IN CASE WE USE LINKED ALLOCATION
 
+    def has_the_same_name(self, another_name: str) -> bool:
+        return another_name == self.name
+
 class Folder():
     def __init__(self, name, current_dir) -> None:
         self.name = name
@@ -14,32 +17,38 @@ class Folder():
 class FileSystem():
     def __init__(self, size) -> None:
         self.max_size = size
-        self.current_dir = Folder('/', current_dir=None)
+        self.root_dir = Folder('/', current_dir=None)
+        self.current_dir = self.root_dir
         self.directories = []
 
-    def create_file(self, name: str, size: int, *, custom_dir: str):
-        file = File(name, size)
+    def create_file(self, name: str, size: int, *, custom_dir: str = None):
         """ Linked allocation for file """
         # BY CREATING A FILE THE USER NEED TO INFORM THE PATH OF IT. BUT SUPPOSING THIS PATH DOES NOT EXISTS,
         # SHOULD THE PROGRAM CREATE IT AUTOMATICALLY OR JUST TELL THE USER THE FOLDER DOES NOT EXIST?
-        folder = self.find_path(custom_dir)
-        if folder:
-            new_file = file
-            if not folder.files:
-                folder.files = new_file # WOULD IT BE AN append() INSTEAD?
-            else:
-                current_file = File(folder.files, size=size)
-                while current_file.next:
-                    # I DON'T KNOW IF THIS CONDITION TO ONSIDER THE EQUALS NAMES WOULD BE WORTHED ON THIS PART OF THE CODE...
-                    # if current_file.name == new_file.name:
-                    #     print(f"The file name already exists in this folder.")
-                    #     break
-                    # else:
-                    current_file = current_file.next
-                current_file.next = new_file
-                print(f"File '{name}' created in '{custom_dir}'.")
+        if custom_dir is None:
+            custom_dir = self.current_dir.name
+
+        if custom_dir != '/':
+            folder = self.find_path(custom_dir)
         else:
-            print(f"Folder '{custom_dir}' not found.")
+            folder = self.root_dir
+
+        if isinstance(folder, Folder):
+            is_file_in_folder = False
+            for folder_file in folder.files:
+                if folder_file.has_the_same_name(name):
+                    is_file_in_folder = True
+
+            if not is_file_in_folder:
+                file = File(name, size)
+                folder.files.append(file)
+                print(f"File '{name}' created in '{custom_dir}'.")
+                return
+
+            print(f"File {name} already exists in {custom_dir}.")
+            return
+
+        print(f"Folder '{custom_dir}' not found.")
 
     def create_folder(self, name) -> None:
         if name[-3::] == '../':
