@@ -77,21 +77,16 @@ class FileSystem():
             print("The system did not find the specified path.")
 
     # Command list contents from a directory
-    def ls(self, path):
-        dir = self.find_path(path)
+    def ls(self, path = None) -> None:
+        folder = self.current_dir if path is None else self.find_path(path)
 
-        if dir:
+        if isinstance(folder, Folder):
             print(f"Contents of '{path}': ")
-            if dir.files:
-                current_file = File(dir.files)
+            for file in folder.files:
+                print(f"File: {file.name} ({file.size} bytes)")
 
-                while current_file:
-                    print(f"File: {current_file.name} ({current_file.size} bytes)")
-                    current_file = current_file.next # IN CASE WE USE LINKED ALLOCATION
-            
-            if Folder(dir.subdirectories): # DOES THIS WORKS LOGICALLY?
-                for subdirectory in dir.subdirectories:
-                    print(f"Subfolder: {subdirectory.name}")
+            for subdirectory in folder.subdirectories:
+                print(f"Subfolder: {subdirectory.name}")
 
     def delete(self, name):
         pass
