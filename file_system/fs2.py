@@ -89,7 +89,7 @@ class Filesystem:
     def remove_file(self, file_name):
         for item in self.current_folder.get_contents():
             if isinstance(item, File) and item.name == file_name:
-                self.deallocate_blocks(item.allocated_blocks)
+                self.deallocate_blocks(self.allocated_blocks)
                 self.current_folder.remove_item(item)
                 print(f"File '{file_name}' removed.")
                 return
