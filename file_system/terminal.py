@@ -27,7 +27,7 @@ class Terminal:
                     print("Usage: create <file_name>")
                 else:
                     content = input("Enter file content: ")
-                    self.filesystem.create_file(parts[1], content)    
+                    self.filesystem.create_file(parts[1], content)
             case 'cd':
                 if len(parts) < 2:
                     print("Usage: cd <folder_name>")
@@ -36,5 +36,7 @@ class Terminal:
             case 'ls':
                 contents = self.filesystem.ls()
                 print("\n".join(contents))
+            case 'frag':
+                print(self.filesystem.calculate_fragmentation())
             case _:
                 print(f"Unknown command: {main_command}")

@@ -32,25 +32,48 @@ class Folder:
 
 
 class Filesystem:
-    def __init__(self, size):
+    def __init__(self, block_size=1024, total_blocks=100):
         self.root = Folder("root")
         self.current_folder = self.root
-        self.size = 50
-        self.current_size = 0
-        self.blocks = []
+        self.block_size = block_size
+        self.total_blocks = total_blocks
+        self.free_blocks = total_blocks
+        self.allocated_blocks = set()
+
+    def allocate_blocks(self, num_blocks):
+        if num_blocks <= self.free_blocks:
+            allocated = set()
+            for _ in range(num_blocks):
+                block_id = self._find_free_block()
+                self.allocated_blocks.add(block_id)
+                allocated.add(block_id)
+                self.free_blocks -= 1
+            return allocated
+        else:
+            return None
+
+    def deallocate_blocks(self, blocks):
+        self.allocated_blocks -= set(blocks)
+        self.free_blocks += len(blocks)
+
+    def _find_free_block(self):
+        for block_id in range(self.total_blocks):
+            if block_id not in self.allocated_blocks:
+                return block_id
+        raise Exception("No free blocks available.")
 
     def mkdir(self, name):
         new_folder = Folder(name)
         self.current_folder.add_item(new_folder)
 
     def create_file(self, name, content=""):
-        new_current_size = len(content) + self.current_size
-        if new_current_size > self.size:
-            print("The disk is full! Try cleaning unused files.")
-            return
-
-        new_file = File(name, content)
-        self.current_folder.add_item(new_file)
+        num_blocks_needed = (len(content) + self.block_size - 1) #self.block_size
+        allocated_blocks = self.allocate_blocks(num_blocks_needed)
+        if allocated_blocks is not None:
+            new_file = File(name, allocated_blocks)
+            self.current_folder.add_item(new_file)
+        else:
+            print("Insufficient free space to create the file.")
 
     def cd(self, folder_name):
         if folder_name == "..":
@@ -84,3 +107,10 @@ class Filesystem:
                 if result is not None:
                     return result
         return None
+    
+    def calculate_fragmentation(self):
+        allocated_blocks_list = sorted(list(self.allocated_blocks))
+        fragmentation = 0
+        for i in range(1, len(allocated_blocks_list)):
+            fragmentation += allocated_blocks_list[i] - allocated_blocks_list[i - 1] - 1
+        return fragmentation
