@@ -66,6 +66,17 @@ class Filesystem:
         new_folder = Folder(name)
         self.current_folder.add_item(new_folder)
 
+    def rmdir(self, folder_name):
+        for item in self.current_folder.get_contents():
+            if isinstance(item, Folder) and item.name == folder_name:
+                if item.get_contents():
+                    print(f"Directory '{folder_name}' is not empty. Cannot remove.")
+                else:
+                    self.current_folder.remove_item(item)
+                    print(f"Directory '{folder_name}' removed.")
+                return
+        print(f"Directory '{folder_name}' not found.")
+
     def create_file(self, name, content=""):
         num_blocks_needed = (len(content) + self.block_size - 1) #self.block_size
         allocated_blocks = self.allocate_blocks(num_blocks_needed)
@@ -74,6 +85,15 @@ class Filesystem:
             self.current_folder.add_item(new_file)
         else:
             print("Insufficient free space to create the file.")
+
+    def remove_file(self, file_name):
+        for item in self.current_folder.get_contents():
+            if isinstance(item, File) and item.name == file_name:
+                self.deallocate_blocks(item.allocated_blocks)
+                self.current_folder.remove_item(item)
+                print(f"File '{file_name}' removed.")
+                return
+        print(f"File '{file_name}' not found.")
 
     def cd(self, folder_name):
         if folder_name == "..":
@@ -107,7 +127,7 @@ class Filesystem:
                 if result is not None:
                     return result
         return None
-    
+
     def calculate_fragmentation(self):
         allocated_blocks_list = sorted(list(self.allocated_blocks))
         fragmentation = 0

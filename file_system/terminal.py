@@ -1,5 +1,7 @@
+from fs2 import Filesystem
+
 class Terminal:
-    def __init__(self, filesystem):
+    def __init__(self, filesystem: Filesystem):
         self.filesystem = filesystem
 
     def run(self):
@@ -22,12 +24,22 @@ class Terminal:
                     print("Usage: mkdir <folder_name>")
                 else:
                     self.filesystem.mkdir(parts[1])
+            case 'rmdir':
+                if len(parts) < 2:
+                    print("Usage: rmdir <folder_name>")
+                else:
+                    self.filesystem.rmdir(parts[1])
             case 'create':
                 if len(parts) < 2:
                     print("Usage: create <file_name>")
                 else:
                     content = input("Enter file content: ")
                     self.filesystem.create_file(parts[1], content)
+            case 'rm':
+                if len(parts) < 2:
+                    print("Usage: rm <file_name>")
+                else:
+                    self.filesystem.remove_file(parts[1])
             case 'cd':
                 if len(parts) < 2:
                     print("Usage: cd <folder_name>")
