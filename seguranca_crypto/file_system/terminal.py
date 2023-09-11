@@ -38,6 +38,9 @@ class Terminal:
                     content = input("Do you want to encrypt the file? (y/N): ") or 'N'
                     if content == 'y':
                         file_content.encrypt(self.filesystem.crypto_key)
+            case 'encrypt_folder':
+                self.filesystem.current_folder.encrypt_folder(self.filesystem.crypto_key)
+
             case 'read':
                 if len(parts) < 2:
                     print("Usage: read <file_name>")
@@ -63,7 +66,6 @@ class Terminal:
                             print("Wrong key, printing encrypted content:\n")
                             print(file_content.decode())
                             return
-
             case 'rm':
                 if len(parts) < 2:
                     print("Usage: rm <file_name>")

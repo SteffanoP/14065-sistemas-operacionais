@@ -1,3 +1,6 @@
+from time import time
+
+time_start = time()
 your_list = 'tes'
 complete_list = []
 for current in range(5):
@@ -10,5 +13,7 @@ for current in range(5):
 for word, pos in zip(complete_list, range(100000)):
     if word == 'test':
         print('A senha é: '+word)
-        print('Posição: '+str(pos))
+        print('Posição: '+ str(pos))
         break
+
+print('Tempo de execução: '+str(time()-time_start))

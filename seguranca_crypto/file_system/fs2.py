@@ -38,6 +38,12 @@ class Folder:
     def get_contents(self):
         return self.contents
 
+    def encrypt_folder(self, key):
+        fernet = Fernet(key)
+        for item in self.contents:
+            if isinstance(item, File):
+                item.content = fernet.encrypt(str(item.content).encode())
+
     def __str__(self):
         return self.name
 
